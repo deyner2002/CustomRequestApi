@@ -104,6 +104,33 @@ namespace CustomRequestApi.Controllers
             return customRequests;
         }
 
+        [HttpPost]
+        [Route("GetAttachments")]
+        public List<string> GetAttachments(int Id)
+        {
+            List<string> attachments = new List<string>();
+
+            using (SqlConnection connection = new SqlConnection(_ConnectionStrings.WebConnection))
+            {
+                connection.Open();
+
+                string query = "SELECT * FROM Attachment WHERE RequestId = @Id";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@Id", Id);
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            attachments.Add(reader["Url"] is DBNull ? string.Empty : (string)reader["Url"]);
+                        }
+                    }
+                }
+            }
+            return attachments;
+        }
+
         private List<string> SaveFilesBlob(int Id, List<string>? attachments)
         {
             List<string> result = new List<string>();
