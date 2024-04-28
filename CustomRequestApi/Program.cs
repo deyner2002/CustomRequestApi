@@ -23,6 +23,7 @@ IConfiguration config = new ConfigurationBuilder()
 })
 .Build();
 
+builder.Services.AddScoped<IBlobStorageService, BlobStorageService>();
 builder.Services.Configure<ConnectionStrings>(config.GetSection("customRequest:sqlconnection"));
 
 builder.Services.Configure<ConnectionStringsBlob>(config.GetSection("customRequest:blobStorage"));
