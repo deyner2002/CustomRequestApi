@@ -28,9 +28,12 @@ builder.Services.Configure<ConnectionStrings>(config.GetSection("customRequest:s
 
 builder.Services.Configure<ConnectionStringsBlob>(config.GetSection("customRequest:blobStorage"));
 
+var _MyCors = "MyCors";
+var HostFront = builder.Configuration.GetValue<string>("HostFront");
+builder.Services.Configure<ConnectionStrings>(builder.Configuration.GetSection("ConnectionStrings"));
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy(name: "MyCors", builder =>
+    options.AddPolicy(name: _MyCors, builder =>
     {
         builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
     });
@@ -46,6 +49,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors(_MyCors);
 
 app.UseAuthorization();
 
